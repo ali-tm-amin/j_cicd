@@ -4,17 +4,6 @@
 
 ![](/images/jenkins.png)
 
-Login page
-![](/images/localhost.png)
-**Step 1**: Create new item
-On the left you should see `New item`, select that.
-![](/images/new_item.png)
-
-**Step 2**: Create job
-Under Enter an item name write the appropriate name for your job
-![](/images/job1.png)
-
-### SSH Connection Between Github and Jenkins 
 
 # How to create a Jenkins CI/CD pipeline
 
