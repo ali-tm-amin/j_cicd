@@ -2,8 +2,9 @@
 
 ![](/images/cicd_jenkins.png)
 
-![](/images/jenkins_server_ec2.png)
-![](/images/jenkins.png)
+![](/images/aws_jenkins_ec2_vpc.png)
+
+![](/images/jenkins.pn)
 
 
 # How to create a Jenkins CI/CD pipeline
