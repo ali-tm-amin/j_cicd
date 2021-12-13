@@ -9,6 +9,9 @@
 
 # How to create a Jenkins CI/CD pipeline
 
+### Step 1 
+https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-18-04
+
 !#[](/images/cicd.png)
 
 ## Step 1: Generate a new key
