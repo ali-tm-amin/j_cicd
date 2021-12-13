@@ -2,12 +2,13 @@
 
 ![](/images/cicd_jenkins.png)
 
+![](/images/jenkins_server_ec2.png)
 ![](/images/jenkins.png)
 
 
 # How to create a Jenkins CI/CD pipeline
 
-![](/images/cicd.png)
+!#[](/images/cicd.png)
 
 ## Step 1: Generate a new key
 
@@ -61,7 +62,7 @@ Setting up the webhook allows GitHub to trigger Jenkins to start a new build whe
 4. Click `Ok`
 5. Create a job for CI, merging and deployment
 
-## **Step 4**: Continuous Integration (CI) Job
+## **Step 4**: Continuous Integration (CI) Job
 
 **General**
 1. Click `Discard old builds` and keep the max number of build to 2
