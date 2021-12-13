@@ -2,23 +2,76 @@
 
 ![](/images/cicd_jenkins.png)
 
-![](/images/aws_jenkins_ec2_vpc.png)
+![](/images/AWS_VPC_jenkins.png)
 
 ![](/images/jenkins.pn)
 
 
 # How to create a Jenkins CI/CD pipeline
+## Install Jenkins on Ubuntu 18.04
+  ### Step 1 - Installing Jenkins
+  - First, add the repository key to the system: 
+  `wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -`
+  - When the key is added, the system will return OK. Next, append the Debian package repository address to the server’s sources.list:
+  `sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'`
+  - `sudo apt update`
+  - `sudo apt install jenkins`
 
-### Step 1 
+- For Long Term Support release:
+
+`      curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+        /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+      echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+        https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+        /etc/apt/sources.list.d/jenkins.list > /dev/null
+      sudo apt-get update
+      sudo apt-get install jenkins`
+
+  - For Installation of Java:
+      `sudo apt update
+      sudo apt search openjdk
+      sudo apt install openjdk-11-jdk
+      sudo apt install openjdk-11-jdk
+      java -version
+`
+  ### Step 2 - Starting Jenkins
+  - `sudo systemctl daemon-reload`
+  - `sudo systemctl start jenkins`
+  - `sudo systemctl status jenkins`
+  ### Step 3 - Opening the Firewall
+  - sudo ufw allow 8080
+  - sudo ufw status
+  - if firewall inactive run these commands:
+  `sudo ufw allow OpenSSH` `sudo ufw enable`
+  
+  ### Step 4 - Setting Up Jenkins
+ - visit Jenkins on its default port, 8080, using your server domain name or IP address: `http://your_server_ip_or_domain:8080`
+ ![](/images/unlock-jenkins.png)
+
+ - `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+ 
+
+ - Copy the 32-character alphanumeric password from the terminal and paste it into the **Administrator password** field, then click **Continue**.
+ ![](/images/customize_jenkins_screen_two.png)
+![](/images/jenkins_create_user.png)
+- On the left-hand side, click **Manage Jenkins**, and then click **Manage Plugins**.
+
+- Click on the **Available** tab, and then enter **node** plugin at the top right.
+
+- elect the checkbox next to **node.js** plugin, and then click **Install without restart**.
+
+
+
+
 https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-18-04
 
-!#[](/images/cicd.png)
 
-## Step 1: Generate a new key
+
+## Step 2: Generate a new key
 
 Generate a new ssh key in your localhost and name is `YOURNAMEjenkins`(eg alijenkins).
 
-## Step 2: Copy Key into Github
+## Step 3: Copy Key into Github
 
 Go into your repo and select `Settings`
 
@@ -28,7 +81,7 @@ Copy the `public ssh key` into key and title `YOURNAMEjenkins`
 
 Now select `Add key`
 
-## Step 3: Connect to Jenckins
+## Step 4: Connect to Jenckins
 
 Create a new Jenkins item and select `Freestyle Project` Set up the following configurations:
 
@@ -47,7 +100,7 @@ Create a new Jenkins item and select `Freestyle Project` Set up the following co
 
 **Github hook trigger for GITScm polling**: check this option 
 
-## Step 4: Setting Up a Webhook:
+## Step 5: Setting Up a Webhook:
 Setting up the webhook allows GitHub to trigger Jenkins to start a new build whenever a new commit is pushed.
 - In the GitHub repository that is to be linked to Jenkins, create a new Webhook (Settings-->Webhooks-->Add webhook)
 
@@ -59,14 +112,14 @@ Setting up the webhook allows GitHub to trigger Jenkins to start a new build whe
 
 - Build History where the Console Output can be read for each individual build
 
-## Step 5: Creating Jenkins Jobs
+## Step 6: Creating Jenkins Jobs
 1. On the Jenkins Dashboard, click on `New Item`
 2. Enter a the name in convetion for the job
 3. Select `Freestyle project`
 4. Click `Ok`
 5. Create a job for CI, merging and deployment
 
-## **Step 4**: Continuous Integration (CI) Job
+## Step 7: Continuous Integration (CI) Job
 
 **General**
 1. Click `Discard old builds` and keep the max number of build to 2
@@ -105,7 +158,7 @@ npm test`
 2. Insert the project name for the merge job
 3. Ensure Trigger only if build is stable is selected
 
-## Step 6: Merge Job
+## Step 8: Merge Job
 General
 1. Click *Discard old builds* and keep the max number of build to 2
 2. Click *GitHub project* and add the HTTP URL of the repository
@@ -134,7 +187,7 @@ Select **Provide Node & npm bin/ folder to PATH**
 6. Ensure **Trigger only if build is stable** is selected
 E7. nsure the **Build other projects** block is below the **Git Publisher** block
 
-## Step 7: EC2 Instance for Deployment
+## Step 9: EC2 Instance for Deployment
 We will deploy our application on an EC2 instance.
 
 1. Create a new EC2 instance
@@ -155,7 +208,7 @@ We will deploy our application on an EC2 instance.
 9. Ensure the public NACL allows SSH (22) with source `jenkins_server_ip/32`
 10. If the Jenkins server updates/reboots, the GitHub webhook, security group and NACL need to be modified
 
-## Step 8: Continuous Deployment Job
+## Step 10: Continuous Deployment Job
 **General**
 1. Click `Discard old builds` and keep the max number of build to 2
 2. Click `GitHub project` and add the HTTP URL of the repository
@@ -177,8 +230,8 @@ We will deploy our application on an EC2 instance.
 
 2. In command, insert the following code:
 
-`rm -rf eng84_cicd_jenkins*
-git clone -b main https://github.com/Olejekglejek/CI_CD_Jenkins.git
+`rm -rf eng99_cicd_jenkins*
+git clone -b main https://github.com/ali-tm-amin/j_cicd.git
 
 rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@deploy_public_ip:/home/ubuntu/app
 rsync -avz -e "ssh -o StrictHostKeyChecking=no" environment ubuntu@deploy_public_ip:/home/ubuntu/app
@@ -205,7 +258,7 @@ ssh -A -o "StrictHostKeyChecking=no" ubuntu@deploy_public_ip <<EOF
 
 3. NOTE: the `deploy_public_ip` will need to be changed each time you re-run the deployment EC2 instance
 
-## Step 9: Trigger the Builds!
+## Step 11: Trigger the Builds!
 1. Switch to the `dev` branch
 2. Make any change to your repository
 3. `Add`, `commit` and `push` your changes to the `dev` branch
