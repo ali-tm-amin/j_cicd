@@ -5,7 +5,7 @@
 
 ![](/images/AWS_VPC_jenkins.png)
 
-![](/images/jenkins.pn)
+![](/images/Jenkins_agent.png)
 
 
 # How to create a Jenkins CI/CD pipeline
