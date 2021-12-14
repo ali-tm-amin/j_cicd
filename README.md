@@ -1,5 +1,6 @@
 # Setting up a Job in Jenkins
 
+
 ![](/images/cicd_jenkins.png)
 
 ![](/images/AWS_VPC_jenkins.png)
@@ -17,7 +18,7 @@
   - `sudo apt update`
   - `sudo apt install jenkins`
 
-- For Long Term Support release:
+	- For Long Term Support release:
 
 `      curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
         /usr/share/keyrings/jenkins-keyring.asc > /dev/null
