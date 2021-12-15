@@ -37,7 +37,7 @@
 2. Go to Manage Jenkins option in main menu;
 
 3. Go to **Manage Nodes** and **clouds** item;
-4. Fill the Node/agent name and select the type; (e.g. Name: agent1, Type: Permanent Agent)
+4. Fill the Node/agent name and select the type; (e.g. **Name**: agent1, **Type**: Permanent Agent)
 
 5. Go to New Node option in side menu;
 
