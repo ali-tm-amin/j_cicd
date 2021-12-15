@@ -3,7 +3,6 @@
 
 ![](/images/cicd_jenkins.png)
 
-![](/images/AWS_VPC_jenkins.png)
 
 ![](/images/Jenkins_agent.png)
 
@@ -134,6 +133,7 @@ Setting up the webhook allows GitHub to trigger Jenkins to start a new build whe
 3. Select `Freestyle project`
 4. Click `Ok`
 5. Create a job for CI, merging and deployment
+![](/images/job1_test.png)
 
 ## Step 7: Continuous Integration (CI) Job
 
@@ -202,8 +202,40 @@ Select **Provide Node & npm bin/ folder to PATH**
 5. Insert the project name for the deploy job
 6. Ensure **Trigger only if build is stable** is selected
 E7. nsure the **Build other projects** block is below the **Git Publisher** block
+![](/images/merge.png)
+![](/images/job2_merge.png)
 
-## Step 9: EC2 Instance for Deployment
+
+## Step 9: Provissioning database
+General
+1. Click *Discard old builds* and keep the max number of build to 2
+2. Click *GitHub project* and add the HTTP URL of the repository
+
+**Office 365 Connector**
+Click *Restrict where this project can be run*, then set it as `sparta-ubuntu-node`
+
+**Source Code Management**
+1. Select **Git**
+2. In **Repositories**:
+  - **Repository URL**: insert the SSH URL
+  - **Credentials**: select the credential you created earlier
+  **Branches to build**: set to */dev (dev branch)
+
+**Build Environment**
+Select **Provide Node & npm bin/ folder to PATH**
+
+**Post-build Actions**
+1. First, **select Add post-build action > Git Publisher**
+2. Click **Push Only If Build Succeeds**
+3. In **Branches**:
+  - **Branch to push**: main
+  - **Target remote name**: origin
+4. Next, select **Add post-build action > Build other projects**
+5. Insert the project name for the deploy job
+6. Ensure **Trigger only if build is stable** is selected
+E7. nsure the **Build other projects** block is below the **Git Publisher** block
+![](/images/job4.png)
+## Step 10: EC2 Instance for Deployment
 We will deploy our application on an EC2 instance.
 
 1. Create a new EC2 instance
@@ -224,7 +256,7 @@ We will deploy our application on an EC2 instance.
 9. Ensure the public NACL allows SSH (22) with source `jenkins_server_ip/32`
 10. If the Jenkins server updates/reboots, the GitHub webhook, security group and NACL need to be modified
 
-## Step 10: Continuous Deployment Job
+## Step 11: Continuous Deployment Job
 **General**
 1. Click `Discard old builds` and keep the max number of build to 2
 2. Click `GitHub project` and add the HTTP URL of the repository
@@ -274,7 +306,7 @@ ssh -A -o "StrictHostKeyChecking=no" ubuntu@deploy_public_ip <<EOF
 
 3. NOTE: the `deploy_public_ip` will need to be changed each time you re-run the deployment EC2 instance
 
-## Step 11: Trigger the Builds!
+## Step 12: Trigger the Builds!
 1. Switch to the `dev` branch
 2. Make any change to your repository
 3. `Add`, `commit` and `push` your changes to the `dev` branch
