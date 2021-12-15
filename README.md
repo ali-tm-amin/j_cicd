@@ -9,6 +9,21 @@
 
 
 # How to create a Jenkins CI/CD pipeline
+
+## Install Java on to ec2 insta server
+
+Ubuntu 18.04 includes Open JDK 11, which is an open-source variant of the JRE and JDK.
+To install this version, first update the package index:
+- sudo apt update
+check if Java is already installed:
+`java --version`
+- If Java is not currently installed
+`sudo apt install default-jre`
+- To verify `java --version`
+- install jdk
+`sudo apt install default-jdk`
+- To verify
+`javac -version`
 ## Install Jenkins on Ubuntu 18.04
   ### Step 1 - Installing Jenkins
   - First, add the repository key to the system: 
