@@ -1,17 +1,30 @@
-# be careful of these keys, they will go out of date
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
-echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+#!/bin/bash
 
+# Update the sources list
 sudo apt-get update -y
+
+# upgrade any packages available
 sudo apt-get upgrade -y
 
-# sudo apt-get install mongodb-org=3.2.20 -y
-sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
 
-# remoe the default .conf and replace with our configuration
-sudo rm /etc/mongod.conf
-sudo ln -s /home/ubuntu/environment/mongod.conf /etc/mongod.conf
+# install git
+sudo apt-get install git -y
 
-# if mongo is is set up correctly these will be successful
-sudo systemctl restart mongod
-sudo systemctl enable mongod
+# install nodejs
+sudo apt-get install python-software-properties -y
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install nodejs -y
+
+# install pm2
+sudo npm install pm2 -g
+
+sudo apt-get install nginx -y
+
+# remove the old file and add our one
+#sudo rm /etc/nginx/sites-available/default
+#sudo cp /home/ubuntu/sre_jenkins_cicd/environment/app/nginx.default /etc/nginx/sites-available/default
+
+# finally, restart the nginx service so the new config takes hold
+#sudo service nginx restart
+#sudo service nginx enable
+#echo 'export DB_HOST="mongodb://addressofthedb:27017/posts"' >> .bashrc
