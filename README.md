@@ -23,7 +23,7 @@ check if Java is already installed:
 `sudo apt install default-jdk`
 - To verify
 `javac -version`
-## Install Jenkins on Ubuntu 18.04
+## Step 1 Install Jenkins on Ubuntu 18.04
   ### Step 1 - Installing Jenkins
   - First, add the repository key to the system: 
   `wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -`
@@ -84,7 +84,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubunt
 
 ## Step 2: Generate a new key
 
-Generate a new ssh key in your localhost and name is `YOURNAMEjenkins`(eg alijenkins).
+Generate a new ssh key in your localhost `ssh-keygen -t ed25519 -C "your_email@example.com"`
 
 ## Step 3: Copy Key into Github
 
@@ -92,9 +92,10 @@ Go into your repo and select `Settings`
 
 Select `Deploy Keys` and select `Add deploy key`
 
-Copy the `public ssh key` into key and title `YOURNAMEjenkins`
+Copy the `public ssh key` into key and title `ssh-jenkins`
 
 Now select `Add key`
+![](/images/ssh_key.png)
 
 ## Step 4: Connect to Jenckins
 
@@ -118,6 +119,7 @@ Create a new Jenkins item and select `Freestyle Project` Set up the following co
 ## Step 5: Setting Up a Webhook:
 Setting up the webhook allows GitHub to trigger Jenkins to start a new build whenever a new commit is pushed.
 - In the GitHub repository that is to be linked to Jenkins, create a new Webhook (Settings-->Webhooks-->Add webhook)
+![](/images/webhook.png)
 
 - **Payload URL**: Add the URL (usually specified with ip and port) with /github-webhook/ appended at the end ie http://18.130.227.98:8080/github-webhook/
 
