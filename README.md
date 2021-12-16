@@ -9,7 +9,7 @@
 
 # How to create a Jenkins CI/CD pipeline
 
-## Install Java on to ec2 insta server
+## Step 1 - Install Java onto ec2 instance server
 
 Ubuntu 18.04 includes Open JDK 11, which is an open-source variant of the JRE and JDK.
 To install this version, first update the package index:
@@ -23,8 +23,8 @@ check if Java is already installed:
 `sudo apt install default-jdk`
 - To verify
 `javac -version`
-## Step 1 Install Jenkins on Ubuntu 18.04
-  ### Step 1 - Installing Jenkins
+## Step 2 Install Jenkins on Ubuntu 18.04
+  ### 1. Installing Jenkins
   - First, add the repository key to the system: 
   `wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -`
   - When the key is added, the system will return OK. Next, append the Debian package repository address to the server’s sources.list:
@@ -42,24 +42,18 @@ check if Java is already installed:
       sudo apt-get update
       sudo apt-get install jenkins`
 
-  - For Installation of Java:
-      `sudo apt update
-      sudo apt search openjdk
-      sudo apt install openjdk-11-jdk
-      sudo apt install openjdk-11-jdk
-      java -version
 `
-  ### Step 2 - Starting Jenkins
+  ### 2. - Starting Jenkins
   - `sudo systemctl daemon-reload`
   - `sudo systemctl start jenkins`
   - `sudo systemctl status jenkins`
-  ### Step 3 - Opening the Firewall
+  ### 3. Opening the Firewall
   - sudo ufw allow 8080
   - sudo ufw status
   - if firewall inactive run these commands:
   `sudo ufw allow OpenSSH` `sudo ufw enable`
   
-  ### Step 4 - Setting Up Jenkins
+  ### 4. Setting Up Jenkins
  - visit Jenkins on its default port, 8080, using your server domain name or IP address: `http://your_server_ip_or_domain:8080`
  ![](/images/unlock-jenkins.png)
 
@@ -80,13 +74,11 @@ check if Java is already installed:
 
 https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-18-04
 
-
-
-## Step 2: Generate a new key
+## Step 3 - Generate a new key
 
 Generate a new ssh key in your localhost `ssh-keygen -t ed25519 -C "your_email@example.com"`
 
-## Step 3: Copy Key into Github
+## Step 4 - Copy Key into Github
 
 Go into your repo and select `Settings`
 
@@ -97,7 +89,7 @@ Copy the `public ssh key` into key and title `ssh-jenkins`
 Now select `Add key`
 ![](/images/ssh_key.png)
 
-## Step 4: Connect to Jenckins
+## Step 5 - Connect to Jenckins
 
 Create a new Jenkins item and select `Freestyle Project` Set up the following configurations:
 
@@ -116,7 +108,7 @@ Create a new Jenkins item and select `Freestyle Project` Set up the following co
 
 **Github hook trigger for GITScm polling**: check this option 
 
-## Step 5: Setting Up a Webhook:
+## Step 6 - Setting Up a Webhook:
 Setting up the webhook allows GitHub to trigger Jenkins to start a new build whenever a new commit is pushed.
 - In the GitHub repository that is to be linked to Jenkins, create a new Webhook (Settings-->Webhooks-->Add webhook)
 ![](/images/webhook.png)
@@ -129,22 +121,29 @@ Setting up the webhook allows GitHub to trigger Jenkins to start a new build whe
 
 - Build History where the Console Output can be read for each individual build
 
-## Step 6: Creating Jenkins Jobs
+## Step 7 - Creating Jenkins Jobs
 1. On the Jenkins Dashboard, click on `New Item`
 2. Enter a the name in convetion for the job
 3. Select `Freestyle project`
 4. Click `Ok`
 5. Create a job for CI, merging and deployment
+
+![](/images/job1.png)
+
+
 ![](/images/job1_test.png)
 
-## Step 7: Continuous Integration (CI) Job
+
+## Step 8 - Continuous Integration (CI) Job
 
 **General**
 1. Click `Discard old builds` and keep the max number of build to 2
 2. Click `GitHub project` and add the HTTP URL of the repository
 **Office 365 Connector**
 
+
 Click `Restrict where this project can be run`, then set it as `sparta-ubuntu-node`
+![](/images/job1_test_config.png)
 
 **Source Code Management**
 1. Select Git
@@ -155,13 +154,19 @@ Click `Restrict where this project can be run`, then set it as `sparta-ubuntu-no
     - Select `Kind` as `SSH Username with private key`
     - Set a suitable description and enter the private key directly. The private key is in your ~/.ssh directory. Ensure that the begin and end text of the key is included.
     - With the credential added, select the one you created
+
+    ![](/images/job1_sc.png)
   - **Branches to build**: set to */dev (dev branch)
+
 
 **Build Triggers**
 - Click *GitHub hook trigger for GITScm polling*
 
+![](/images/job1_bt.png)
+
 **Build Environment**
 - Click *Provide Node & npm bin/ folder to PATH*
+![](/images/job1_be.png)
 
 **Build**
 1. Click *Add build step > Execute Shell*
@@ -175,8 +180,9 @@ npm test`
 1. *Select Add post-build action > Build other projects*
 2. Insert the project name for the merge job
 3. Ensure Trigger only if build is stable is selected
+![](/images/job1_bop.png)
 
-## Step 8: Merge Job
+## Step 9 - Merge Job
 General
 1. Click *Discard old builds* and keep the max number of build to 2
 2. Click *GitHub project* and add the HTTP URL of the repository
@@ -204,11 +210,17 @@ Select **Provide Node & npm bin/ folder to PATH**
 5. Insert the project name for the deploy job
 6. Ensure **Trigger only if build is stable** is selected
 E7. nsure the **Build other projects** block is below the **Git Publisher** block
+
 ![](/images/merge.png)
-![](/images/job2_merge.png)
 
+![](/images/merge_job2.png)
 
-## Step 9: Provissioning database
+## Step 10 - Deploying app onto ec2 Instance
+![](/images/job3_description.png)
+![](/images/job3_shell.png)
+
+![](/images/job3_output.png)
+## Step 11 - Provissioning database
 General
 1. Click *Discard old builds* and keep the max number of build to 2
 2. Click *GitHub project* and add the HTTP URL of the repository
@@ -236,8 +248,11 @@ Select **Provide Node & npm bin/ folder to PATH**
 5. Insert the project name for the deploy job
 6. Ensure **Trigger only if build is stable** is selected
 E7. nsure the **Build other projects** block is below the **Git Publisher** block
-![](/images/job4.png)
-## Step 10: EC2 Instance for Deployment
+
+![](/images/job4_shell.png)
+
+![](/images/job4_output.png)
+## Step 12 - EC2 Instance for Deployment
 We will deploy our application on an EC2 instance.
 
 1. Create a new EC2 instance
@@ -258,7 +273,7 @@ We will deploy our application on an EC2 instance.
 9. Ensure the public NACL allows SSH (22) with source `jenkins_server_ip/32`
 10. If the Jenkins server updates/reboots, the GitHub webhook, security group and NACL need to be modified
 
-## Step 11: Continuous Deployment Job
+## Step 13: Continuous Deployment Job
 **General**
 1. Click `Discard old builds` and keep the max number of build to 2
 2. Click `GitHub project` and add the HTTP URL of the repository
@@ -308,7 +323,7 @@ ssh -A -o "StrictHostKeyChecking=no" ubuntu@deploy_public_ip <<EOF
 
 3. NOTE: the `deploy_public_ip` will need to be changed each time you re-run the deployment EC2 instance
 
-## Step 12: Trigger the Builds!
+## Step 14: Trigger the Builds!
 1. Switch to the `dev` branch
 2. Make any change to your repository
 3. `Add`, `commit` and `push` your changes to the `dev` branch
