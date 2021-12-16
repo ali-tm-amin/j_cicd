@@ -216,11 +216,60 @@ E7. nsure the **Build other projects** block is below the **Git Publisher** bloc
 ![](/images/merge_job2.png)
 
 ## Step 10 - Deploying app onto ec2 Instance
+**General**
+1. Click `Discard old builds` and keep the max number of build to 2
+2. Click `GitHub project` and add the HTTP URL of the repository
+
 ![](/images/job3_description.png)
+**Office 365 Connector**
+- Click Restrict where this project can be run, then set it as `sparta-ubuntu-node`
+
+**Source Code Management**
+- Keep it at **None**
+
+**Build Environment**
+1. Select *Provide Node & npm bin/ folder to PATH*
+2. Select *SSH Agent*:
+  - Select *Specific credentials*
+  - Select the SSH key for the EC2 instance (DevOpsStudent in this case)
+
+**Build**
+1. Select **Add build step > Execute Shell**
+
+2. In command, insert the following code: 
+
+    `rm -rf eng99_cicd_jenkins*
+    git clone -b main https://github.com/ali-tm-amin/j_cicd.git
+
+    rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@deploy_public_ip:/home/ubuntu/app
+    rsync -avz -e "ssh -o StrictHostKeyChecking=no" environment ubuntu@deploy_public_ip:/home/ubuntu/app
+
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@deploy_public_ip <<EOF
+
+        # 'kill' all running instances of node.js
+        killall npm
+
+        # run provisions file for dependencies
+        cd /home/ubuntu/app/environment/app
+        chmod +x provision.sh
+        ./provision.sh
+
+        # Install npm for remaining dependencies
+        cd /home/ubuntu/app/app
+        sudo npm install
+        node seeds/seed.js
+
+        # Run the app
+        node app.js &
+        
+        EOF`
+
 ![](/images/job3_shell.png)
 
 ![](/images/job3_output.png)
-## Step 11 - Provissioning database
+
+3. NOTE: the `deploy_public_ip` will need to be changed each time you re-run the deployment EC2 instance
+## Step 11 - Provisioning database
 General
 1. Click *Discard old builds* and keep the max number of build to 2
 2. Click *GitHub project* and add the HTTP URL of the repository
@@ -273,57 +322,7 @@ We will deploy our application on an EC2 instance.
 9. Ensure the public NACL allows SSH (22) with source `jenkins_server_ip/32`
 10. If the Jenkins server updates/reboots, the GitHub webhook, security group and NACL need to be modified
 
-## Step 13: Continuous Deployment Job
-**General**
-1. Click `Discard old builds` and keep the max number of build to 2
-2. Click `GitHub project` and add the HTTP URL of the repository
-
-**Office 365 Connector**
-- Click Restrict where this project can be run, then set it as `sparta-ubuntu-node`
-
-**Source Code Management**
-- Keep it at **None**
-
-**Build Environment**
-1. Select *Provide Node & npm bin/ folder to PATH*
-2. Select *SSH Agent*:
-  - Select *Specific credentials*
-  - Select the SSH key for the EC2 instance (DevOpsStudent in this case)
-
-**Build**
-1. Select **Add build step > Execute Shell**
-
-2. In command, insert the following code:
-
-`rm -rf eng99_cicd_jenkins*
-git clone -b main https://github.com/ali-tm-amin/j_cicd.git
-
-rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@deploy_public_ip:/home/ubuntu/app
-rsync -avz -e "ssh -o StrictHostKeyChecking=no" environment ubuntu@deploy_public_ip:/home/ubuntu/app
-
-ssh -A -o "StrictHostKeyChecking=no" ubuntu@deploy_public_ip <<EOF
-
-    # 'kill' all running instances of node.js
-    killall npm
-
-    # run provisions file for dependencies
-    cd /home/ubuntu/app/environment/app
-    chmod +x provision.sh
-    ./provision.sh
-
-    # Install npm for remaining dependencies
-    cd /home/ubuntu/app/app
-    sudo npm install
-    node seeds/seed.js
-
-    # Run the app
-    node app.js &
-    
-    EOF`
-
-3. NOTE: the `deploy_public_ip` will need to be changed each time you re-run the deployment EC2 instance
-
-## Step 14: Trigger the Builds!
+## Step 13: Trigger the Builds!
 1. Switch to the `dev` branch
 2. Make any change to your repository
 3. `Add`, `commit` and `push` your changes to the `dev` branch
