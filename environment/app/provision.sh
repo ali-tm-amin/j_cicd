@@ -27,3 +27,4 @@ sudo apt-get install nginx -y
 # finally, restart the nginx service so the new config takes hold
 #sudo service nginx restart
 #sudo service nginx enable
+#echo 'export DB_HOST="mongodb://addressofthedb:27017/posts"' >> .bashrc
