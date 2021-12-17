@@ -141,7 +141,6 @@ Setting up the webhook allows GitHub to trigger Jenkins to start a new build whe
 2. Click `GitHub project` and add the HTTP URL of the repository
 **Office 365 Connector**
 
-
 Click `Restrict where this project can be run`, then set it as `sparta-ubuntu-node`
 ![](/images/job1_test_config.png)
 
